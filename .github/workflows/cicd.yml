@@ -1,7 +1,7 @@
 # 해당 Workflow의 이름
 name: CICD_WORKSHOP
 
-# 해당 Github Actions를 실행할 상태를 나타냄
+# 해당 Github Actions를 실행할 상태를 나타냄(조건문)
 on:
   workflow_dispatch:
   push:
@@ -14,10 +14,10 @@ jobs:
     env: 
       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
       ECR_URL: ${{ secrets.ECR_URI }}
-      IMAGE_TAG: ${{ github.sha }}
+      IMAGE_TAG: ${{ github.sha }} # 이미지 버전 나타내는 태그
 
     steps:
-      #체크아웃
+      #체크아웃(변경사항 확인)
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -48,7 +48,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
   cd: # cd라는 이름으로 Job을 실행하겠다.
-    needs: ci
+    needs: ci # ci를 실행한 다음 실행하겠다 (= 없을 경우 동시에 실행됨)
     name: CD
     runs-on: ubuntu-latest
     steps:
